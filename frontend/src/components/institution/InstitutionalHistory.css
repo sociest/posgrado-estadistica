@@ -1,66 +1,54 @@
 .institution-principles {
   padding: clamp(3.5rem, 6vw, 5.5rem) 0;
-  background: linear-gradient(145deg, #f7fafc 0%, #eef4f5 52%, #f6f2e9 100%);
+  background: linear-gradient(145deg, var(--color-bg-primary, #f9f9f6) 0%, var(--color-blue-steel-subtle, #edf4f9) 55%, var(--color-green-inst-subtle, #eaf5ec) 100%);
 }
 
-.institution-principles__layout {
-  display: grid;
-  grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(1.25rem, 3vw, 2.5rem);
-  align-items: stretch;
+.institution-principles__header {
+  max-width: 760px;
+  margin: 0 auto clamp(2rem, 4vw, 3rem);
+  text-align: center;
 }
 
-.institution-principles__image {
-  position: relative;
-  min-height: 450px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  border-radius: 24px;
-  background: #dce8e8;
-  box-shadow: 0 24px 55px -35px rgba(15, 42, 52, 0.55);
+.institution-principles__eyebrow {
+  color: var(--color-green-inst, #267342);
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.institution-principles__image::after {
-  position: absolute;
-  inset: 35% 0 0;
-  background: linear-gradient(transparent, rgba(8, 25, 39, 0.72));
-  content: "";
+.institution-principles__header h2,
+.institution-values__heading h3 {
+  margin: 0.45rem 0 0.6rem;
+  color: var(--color-text-main, #33373d);
+  font-family: var(--font-family-heading, var(--font-display, inherit));
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 850;
+  letter-spacing: -0.03em;
 }
 
-.institution-principles__image img {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-  object-fit: cover;
-}
-
-.institution-principles__image span {
-  position: absolute;
-  z-index: 1;
-  right: 1.25rem;
-  bottom: 1.25rem;
-  left: 1.25rem;
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 750;
-  letter-spacing: 0.02em;
+.institution-principles__header p {
+  margin: 0;
+  color: var(--color-text-muted, #5f656d);
+  font-size: 1.05rem;
 }
 
 .institution-principles__cards {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 1.75rem);
 }
 
 .institution-principle-card {
   position: relative;
-  padding: clamp(1.6rem, 3vw, 2.3rem);
+  min-height: 260px;
+  padding: clamp(1.7rem, 3.2vw, 2.5rem);
   overflow: hidden;
-  border: 1.5px solid color-mix(in srgb, var(--principle-accent) 26%, white);
-  border-radius: 20px;
-  background: linear-gradient(135deg, #ffffff 0%, var(--principle-soft) 100%);
-  box-shadow: 0 16px 36px -24px color-mix(in srgb, var(--principle-accent) 45%, transparent);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid color-mix(in srgb, var(--principle-accent) 25%, white);
+  border-radius: 24px;
+  background: linear-gradient(135deg, #fff 0%, var(--principle-soft) 100%);
+  box-shadow: var(--shadow-lg, 0 12px 32px -4px rgba(51, 55, 61, 0.1));
+  transition: transform var(--transition-normal, 0.25s ease), box-shadow var(--transition-normal, 0.25s ease);
 }
 
 .institution-principle-card:hover {
@@ -82,13 +70,13 @@
 }
 
 .institution-principle-card--mission {
-  --principle-accent: #267342;
-  --principle-soft: #eaf5ec;
+  --principle-accent: var(--color-green-inst, #267342);
+  --principle-soft: var(--color-green-inst-subtle, #eaf5ec);
 }
 
 .institution-principle-card--vision {
-  --principle-accent: #1e5f8a;
-  --principle-soft: #edf5fa;
+  --principle-accent: var(--color-blue-steel, #4f7e9f);
+  --principle-soft: var(--color-blue-steel-subtle, #edf4f9);
 }
 
 .institution-principle-card__icon {
@@ -97,7 +85,7 @@
   height: 2.85rem;
   margin-bottom: 0.85rem;
   place-items: center;
-  border-radius: 14px;
+  border-radius: 15px;
   background: var(--principle-accent);
   color: #fff;
   box-shadow: 0 8px 18px -6px var(--principle-accent);
@@ -111,13 +99,13 @@
   text-transform: uppercase;
 }
 
-.institution-principle-card h2 {
+.institution-principle-card h3 {
   position: relative;
   z-index: 1;
   margin: 0.35rem 0 0.75rem;
-  color: #0f1e2f;
-  font-family: var(--font-display, inherit);
-  font-size: clamp(1.25rem, 2.2vw, 1.65rem);
+  color: var(--principle-accent);
+  font-family: var(--font-family-heading, var(--font-display, inherit));
+  font-size: clamp(1.6rem, 2.5vw, 2rem);
   font-weight: 850;
   line-height: 1.25;
 }
@@ -126,11 +114,87 @@
   position: relative;
   z-index: 1;
   margin: 0;
-  color: #334155;
-  font-size: 0.98rem;
-  line-height: 1.7;
+  color: var(--color-text-muted, #5f656d);
+  font-size: 1rem;
+  line-height: 1.75;
 }
 
+.institution-values {
+  margin-top: clamp(3rem, 5vw, 4.5rem);
+}
+
+.institution-values__heading {
+  margin-bottom: 1.4rem;
+  text-align: center;
+}
+
+.institution-values__heading h3 {
+  font-size: clamp(1.55rem, 2.8vw, 2.1rem);
+}
+
+.institution-values__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.institution-value-card {
+  position: relative;
+  min-height: 230px;
+  padding: 1.4rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--value-accent) 22%, white);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #fff, var(--value-soft));
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(51, 55, 61, 0.08));
+  transition: transform var(--transition-normal, 0.25s ease), box-shadow var(--transition-normal, 0.25s ease);
+}
+
+.institution-value-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg, 0 12px 32px rgba(51, 55, 61, 0.1));
+}
+
+.institution-value-card--green {
+  --value-accent: var(--color-green-inst, #267342);
+  --value-soft: var(--color-green-inst-subtle, #eaf5ec);
+}
+
+.institution-value-card--blue {
+  --value-accent: var(--color-blue-steel, #4f7e9f);
+  --value-soft: var(--color-blue-steel-subtle, #edf4f9);
+}
+
+.institution-value-card__icon {
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  margin-bottom: 1rem;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--value-soft);
+  color: var(--value-accent);
+}
+
+.institution-value-card h4 {
+  margin: 0 0 0.55rem;
+  color: var(--value-accent);
+  font-family: var(--font-family-heading, var(--font-display, inherit));
+  font-size: 1.08rem;
+  font-weight: 850;
+  line-height: 1.3;
+}
+
+.institution-value-card p {
+  margin: 0;
+  color: var(--color-text-muted, #5f656d);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+/* ============================================================================
+   LÍNEA DE TIEMPO VERTICAL INSTITUCIONAL (HISTORIA)
+   ============================================================================ */
 .institution-principle-card small {
   position: relative;
   z-index: 1;
@@ -445,6 +509,12 @@
 }
 
 @media (max-width: 800px) {
-  .institution-principles__layout { grid-template-columns: 1fr; }
-  .institution-principles__image { min-height: 300px; }
+  .institution-values__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .institution-principles__cards,
+  .institution-values__grid { grid-template-columns: 1fr; }
+  .institution-principle-card { min-height: 0; }
+  .institution-value-card { min-height: 0; }
 }

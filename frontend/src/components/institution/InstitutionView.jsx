@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { institutionTimeline } from '../../data/facultyData';
-import { Eye, History, Target } from 'lucide-react';
+import { Eye, History, Target, Users, FlaskConical, Globe2, Award } from 'lucide-react';
 import { useScrollReveal } from '../../utils/reveal';
 
 import slide1 from '../../assets/images/carrusel/slide1.jpg';
-import misionVisionImg from '../../assets/images/mision_vision.jpg';
 import { docenteService } from '../../services/docenteService';
 import { apiJson } from '../../utils/api';
 import AdministrativeStaffSection from './AdministrativeStaffSection';
@@ -88,36 +87,56 @@ export const InstitutionView = () => {
         </div>
       </section>
 
-      {/* Misión y visión oficiales de la Carrera */}
-      <section className="institution-principles" data-reveal aria-label="Misión y visión de la Carrera de Estadística">
-        <div className="container institution-principles__layout">
-          <div className="institution-principles__image">
-            <img
-              src={misionVisionImg}
-              alt="Investigación, análisis y modelación estadística en la FCPN UMSA"
-              loading="lazy"
-              decoding="async"
-            />
-            <span>Universidad Mayor de San Andrés · FCPN</span>
-          </div>
+      {/* Misión, visión y valores institucionales */}
+      <section className="institution-principles" data-reveal aria-labelledby="principles-title">
+        <div className="container">
+          <header className="institution-principles__header">
+            <span className="institution-principles__eyebrow">Nuestra identidad</span>
+            <h2 id="principles-title">Misión, visión y valores</h2>
+            <p>El compromiso que guía la formación estadística en la UMSA.</p>
+          </header>
           <div className="institution-principles__cards">
             <article className="institution-principle-card institution-principle-card--mission">
               <div className="institution-principle-card__icon"><Target size={22} aria-hidden="true" /></div>
-              <span className="institution-principle-card__eyebrow">Propósito institucional</span>
-              <h2>Misión de la Carrera de Estadística</h2>
-              <p>
-                La Carrera tiene que tener una Misión clara, precisa, pertinente y realizable, con todos los recursos que posibiliten su realización, la Misión de la Carrera tiene que estar explícitamente escrita y servir de orientación para el funcionamiento de la misma.
-              </p>
+              <span className="institution-principle-card__eyebrow">Nuestro propósito</span>
+              <h3>Misión</h3>
+              <p>Formar profesionales idóneos y competentes en Estadística, capaces de generar soluciones creativas e innovadoras, comprometidos con el desarrollo nacional.</p>
             </article>
             <article className="institution-principle-card institution-principle-card--vision">
               <div className="institution-principle-card__icon"><Eye size={22} aria-hidden="true" /></div>
-              <span className="institution-principle-card__eyebrow">Horizonte institucional</span>
-              <h2>Visión de la Carrera de Estadística</h2>
-              <p>
-                La Carrera de Estadística será ―una institución líder en la ciencia de la Estadística, dentro del ámbito académico, humanístico, investigativo, científico, tecnológico y práctico, con participación activa en la opinión pública y académica en el desarrollo y transformación a nivel nacional e internacional”20.
-              </p>
-              <small>Plan Académico 2012 y Plan de Desarrollo Institucional 2012–2017 · Resolución HCF Nº 671/2013</small>
+              <span className="institution-principle-card__eyebrow">Nuestro horizonte</span>
+              <h3>Visión</h3>
+              <p>Ser líder en la formación de profesionales en ciencia estadística, buscando excelencia académica mediante docencia, investigación y extensión.</p>
             </article>
+          </div>
+
+          <div className="institution-values">
+            <div className="institution-values__heading">
+              <span className="institution-principles__eyebrow">Principios que nos representan</span>
+              <h3>Nuestros valores</h3>
+            </div>
+            <div className="institution-values__grid">
+              <article className="institution-value-card institution-value-card--green">
+                <div className="institution-value-card__icon"><Award size={22} aria-hidden="true" /></div>
+                <h4>Excelencia académica</h4>
+                <p>Formación de profesionales altamente calificados, con pensamiento crítico y capacidad analítica.</p>
+              </article>
+              <article className="institution-value-card institution-value-card--blue">
+                <div className="institution-value-card__icon"><Users size={22} aria-hidden="true" /></div>
+                <h4>Inclusión e igualdad</h4>
+                <p>Educación de calidad accesible para todos los sectores de la sociedad boliviana, sin discriminación.</p>
+              </article>
+              <article className="institution-value-card institution-value-card--blue">
+                <div className="institution-value-card__icon"><FlaskConical size={22} aria-hidden="true" /></div>
+                <h4>Investigación científica</h4>
+                <p>Generación de conocimiento aplicado mediante el IETA para resolver problemas nacionales estratégicos.</p>
+              </article>
+              <article className="institution-value-card institution-value-card--green">
+                <div className="institution-value-card__icon"><Globe2 size={22} aria-hidden="true" /></div>
+                <h4>Responsabilidad social</h4>
+                <p>Contribución activa al desarrollo sostenible mediante análisis estadístico ético y socialmente responsable.</p>
+              </article>
+            </div>
           </div>
         </div>
       </section>

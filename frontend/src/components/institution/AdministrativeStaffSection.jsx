@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   AlertTriangle,
   Compass,
-  Mail,
-  Phone,
   RefreshCw,
   UserRound,
 } from 'lucide-react';
@@ -35,7 +33,6 @@ function StaffAvatar({ nombre, fotoUrl, className = 'staff-avatar' }) {
 function StaffCard({ person, isDirector = false }) {
   const nombre = person.nombre?.trim() || 'Funcionario Administrativo';
   const cargo = person.cargo || (isDirector ? 'Director de la Carrera de Estadística' : 'Gestión Administrativa');
-  const oficina = person.oficina || '';
 
   return (
     <article className="staff-card directory-row">
@@ -48,15 +45,6 @@ function StaffCard({ person, isDirector = false }) {
           <h3 className="staff-card__name">{nombre}</h3>
           <p className="staff-card__cargo">{cargo}</p>
         </div>
-      </div>
-      <address className="directory-row__contact" aria-label={`Contacto de ${nombre}`}>
-        {person.email && <a href={`mailto:${person.email}`}><Mail size={16} aria-label="Correo electrónico" /><span>{person.email}</span></a>}
-        {person.telefono && <a href={`tel:${String(person.telefono).replace(/[^\d+]/g, '')}`}><Phone size={16} aria-label="Teléfono" /><span>{person.telefono}</span></a>}
-        {!person.email && !person.telefono && <span className="directory-row__muted">Atención presencial</span>}
-      </address>
-      <div className="directory-row__location">
-        <span className="directory-row__label">Oficina</span>
-        <span>{oficina || 'Ubicación no registrada'}</span>
       </div>
     </article>
   );

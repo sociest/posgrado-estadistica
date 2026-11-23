@@ -47,8 +47,6 @@ function StaffCard({ person, isDirector = false }) {
         <div>
           <h3 className="staff-card__name">{nombre}</h3>
           <p className="staff-card__cargo">{cargo}</p>
-          {person.grado && <p className="directory-row__degree">{person.grado}</p>}
-          {person.area && <p className="directory-row__degree">{person.area}</p>}
         </div>
       </div>
       <address className="directory-row__contact" aria-label={`Contacto de ${nombre}`}>

@@ -139,7 +139,6 @@ export default function PersonalAdministrativoPanel() {
             {error && <p role="alert" className="em-alert em-alert-error">{error}</p>}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
               <label className="form-group">Nombre completo<input className="form-input" required maxLength={150} value={formulario.nombre} onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })} /></label>
-              <label className="form-group">Cargo<input className="form-input" required maxLength={150} value={formulario.cargo} onChange={(e) => setFormulario({ ...formulario, cargo: e.target.value })} /></label>
               <label className="form-group">Grado o título<input className="form-input" maxLength={200} value={formulario.grado || ''} onChange={(e) => setFormulario({ ...formulario, grado: e.target.value })} /></label>
               <label className="form-group">Oficina<input className="form-input" maxLength={255} value={formulario.oficina || ''} onChange={(e) => setFormulario({ ...formulario, oficina: e.target.value })} /></label>
               <label className="form-group">Correo electrónico<input className="form-input" type="email" maxLength={255} value={formulario.email || ''} onChange={(e) => setFormulario({ ...formulario, email: e.target.value })} /></label>

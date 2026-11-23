@@ -12,7 +12,7 @@
 }
 
 .staff-section__inner {
-  width: min(100%, 75rem);
+  width: min(100%, 90rem);
   margin-inline: auto;
 }
 
@@ -329,8 +329,8 @@
    ========================================================================== */
 .staff-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
-  gap: 1.65rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+  gap: clamp(1.1rem, 2vw, 1.75rem);
 }
 
 /* ── Tarjeta individual interactiva ── */

@@ -1,155 +1,581 @@
-import React, { useState, useEffect } from 'react';
-import {
-  AlertTriangle,
-  Compass,
-  RefreshCw,
-  UserRound,
-} from 'lucide-react';
-import { DataStatus, getInitials } from './InstitutionUI';
-import './AdministrativeStaffSection.css';
+/* ==========================================================================
+   PERSONAL ADMINISTRATIVO — DISEÑO TARJETAS INTERACTIVAS PREMIUM
+   Inspirado en Design Systems de Educación Superior
+   ========================================================================== */
 
-const isTrue = (v) => v === true || v === 1 || v === '1' || v === 'true';
-
-function StaffAvatar({ nombre, fotoUrl, className = 'staff-avatar' }) {
-  const [showPhoto, setShowPhoto] = useState(Boolean(fotoUrl));
-  useEffect(() => { setShowPhoto(Boolean(fotoUrl)); }, [fotoUrl]);
-
-  return (
-    <div className={className} aria-hidden="true">
-      {showPhoto ? (
-        <img
-          src={fotoUrl}
-          alt={`Fotografía de ${nombre}`}
-          loading="lazy"
-          onError={() => setShowPhoto(false)}
-        />
-      ) : (
-        <span>{getInitials(nombre) || '?'}</span>
-      )}
-    </div>
-  );
+.staff-section {
+  padding: clamp(3.5rem, 6vw, 5.5rem) 1.25rem;
+  background:
+    radial-gradient(ellipse at 95% 0%, rgba(38, 115, 66, 0.09), transparent 30rem),
+    radial-gradient(ellipse at 3% 100%, rgba(79, 126, 159, 0.10), transparent 28rem),
+    linear-gradient(180deg, #f8fafc 0%, var(--color-bg-primary, #f9f9f6) 100%);
 }
 
-function StaffCard({ person, isDirector = false, tone = 'green' }) {
-  const nombre = person.nombre?.trim() || 'Funcionario Administrativo';
-  const cargo = person.cargo || (isDirector ? 'Director de la Carrera de Estadística' : 'Gestión Administrativa');
-
-  return (
-    <article className={`staff-card directory-row tone-${tone}`}>
-      <div className="directory-row__identity">
-        <figure className="directory-row__photo">
-          <StaffAvatar nombre={nombre} fotoUrl={person.foto_url} className="directory-row__avatar" />
-          <figcaption className="sr-only">Fotografía de {nombre}</figcaption>
-        </figure>
-        <div>
-          <h3 className="staff-card__name">{nombre}</h3>
-          <p className="staff-card__cargo">{cargo}</p>
-        </div>
-      </div>
-    </article>
-  );
+.staff-section__inner {
+  width: min(100%, 90rem);
+  margin-inline: auto;
 }
 
-export default function AdministrativeStaffSection({
-  people = [],
-  status = 'loading',
-  error = '',
-  onRetry
-}) {
-  const directorIndex = people.findIndex((p) => isTrue(p.es_director));
-  const director = directorIndex >= 0 ? people[directorIndex] : null;
-  const staff = people.filter((_, i) => i !== directorIndex);
+/* ── Encabezado Principal ── */
+.staff-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-border, #dce1da);
+  position: relative;
+}
 
-  const directoryPeople = director ? [director, ...staff] : staff;
+.staff-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 6rem;
+  height: 3px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--color-green-inst, #267342), var(--color-blue-steel, #4f7e9f));
+}
 
-  const loading = status === 'loading' && people.length === 0;
-  const failed = status === 'error' && people.length === 0;
-  const empty = status === 'ready' && people.length === 0;
+.staff-header__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-green-inst, #267342);
+  margin-bottom: 0.4rem;
+}
 
-  return (
-    <section className="staff-section" aria-labelledby="staff-heading">
-      <div className="staff-section__inner">
-        {/* Cabecera Principal */}
-        <header className="staff-header">
-          <div>
-            <div className="staff-header__kicker">
-              <Compass size={14} aria-hidden="true" />
-              <span>ESTRUCTURA ORGANIZACIONAL &amp; GESTIÓN</span>
-            </div>
-            <h2 id="staff-heading">Dirección y Personal Administrativo</h2>
-            <p>
-              Cuerpo directivo y profesional responsable del soporte operativo, trámites estudiantiles, admisiones y gestión institucional de la Carrera de Estadística.
-            </p>
-          </div>
-          {status !== 'ready' && <DataStatus
-            status={status}
-            count={people.length}
-            noun={people.length === 1 ? 'funcionario' : 'funcionarios'}
-            error={error}
-            onRetry={onRetry}
-          />}
-        </header>
+.staff-header h2 {
+  margin: 0;
+  color: var(--color-text-main, #33373d);
+  font-family: var(--font-family-heading, inherit);
+  font-size: clamp(2rem, 3.8vw, 2.85rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
 
-        {/* Estados de Carga, Error y Vacío */}
-        {loading && (
-          <div className="staff-cards-grid" aria-hidden="true">
-            {[1, 2, 3].map((n) => (
-              <div key={n} className="staff-skeleton-card">
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                  <div className="staff-skeleton-avatar" />
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <div className="staff-skeleton-line" style={{ width: '75%', height: '16px' }} />
-                    <div className="staff-skeleton-line" style={{ width: '50%' }} />
-                  </div>
-                </div>
-                <div className="staff-skeleton-line" style={{ width: '40%' }} />
-                <div className="staff-skeleton-line" style={{ width: '90%' }} />
-              </div>
-            ))}
-          </div>
-        )}
+.staff-header p {
+  margin: 0.6rem 0 0;
+  max-width: 62ch;
+  color: var(--color-text-muted, #5f656d);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
 
-        {failed && (
-          <div className="inst-panel inst-panel--error" style={{ textAlign: 'center', padding: '3rem 1.5rem', background: '#ffffff', borderRadius: '14px', border: '1px solid var(--color-border)' }}>
-            <AlertTriangle size={32} style={{ color: '#b91c1c', marginBottom: '0.75rem' }} />
-            <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--color-text-main)' }}>No se pudo conectar con el servidor</h3>
-            <p style={{ margin: '0 0 1rem 0', color: 'var(--color-text-muted)' }}>Ocurrió un error al cargar el personal administrativo.</p>
-            {onRetry && (
-              <button
-                type="button"
-                onClick={onRetry}
-                className="staff-btn-action"
-                style={{ display: 'inline-flex', padding: '0.6rem 1.25rem', width: 'auto' }}
-              >
-                <RefreshCw size={15} />
-                <span>Reintentar</span>
-              </button>
-            )}
-          </div>
-        )}
+/* ── Toolbar interactiva con buscador y filtro ── */
+.staff-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  background: var(--color-bg-white, #ffffff);
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border, #dce1da);
+  box-shadow: 0 2px 8px -2px rgba(51, 55, 61, 0.05);
+}
 
-        {empty && (
-          <div className="inst-panel" style={{ textAlign: 'center', padding: '3rem 1.5rem', background: '#ffffff', borderRadius: '14px', border: '1px dashed var(--color-border)' }}>
-            <UserRound size={32} style={{ color: 'var(--color-text-subtle)', marginBottom: '0.75rem' }} />
-            <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--color-text-main)' }}>Sin funcionarios registrados</h3>
-            <p style={{ margin: 0, color: 'var(--color-text-muted)' }}>No se encontraron registros activos de personal en la base de datos.</p>
-          </div>
-        )}
+.staff-search {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  min-width: 260px;
+  max-width: 440px;
+  background: var(--color-bg-primary, #f9f9f6);
+  border: 1.5px solid var(--color-border, #dce1da);
+  border-radius: 8px;
+  padding: 0.5rem 0.85rem;
+  color: var(--color-text-main, #33373d);
+  transition: all 0.2s ease;
+}
 
-        {/* 3. Grid de Tarjetas de Personal Administrativo */}
-        {directoryPeople.length > 0 && (
-          <div className="staff-cards-grid">
-            {directoryPeople.map((person, i) => (
-              <StaffCard
-                key={person.id_personal ?? `${person.nombre}-${i}`}
-                person={person}
-                isDirector={director === person}
-                tone={['green', 'blue', 'teal', 'indigo'][i % 4]}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
-  );
+.staff-search:focus-within {
+  border-color: var(--color-green-inst, #267342);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(38, 115, 66, 0.15);
+}
+
+.staff-search input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 0.9rem;
+  color: var(--color-text-main, #33373d);
+  outline: none;
+}
+
+.staff-filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  overflow-x: auto;
+  max-width: 100%;
+  padding-bottom: 2px;
+}
+
+.staff-filter-btn {
+  padding: 0.45rem 0.95rem;
+  border-radius: 20px;
+  border: 1.5px solid transparent;
+  background: transparent;
+  color: var(--color-text-muted, #5f656d);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+
+.staff-filter-btn:hover {
+  background: var(--color-bg-primary, #f9f9f6);
+  color: var(--color-green-inst, #267342);
+}
+
+.staff-filter-btn.is-active {
+  background: var(--color-green-inst-subtle, #eaf5ec);
+  border-color: var(--color-green-inst-border, rgba(38, 115, 66, 0.25));
+  color: var(--color-green-inst, #267342);
+}
+
+/* ==========================================================================
+   TARJETA DEL DIRECTOR — Hero institucional premium
+   ========================================================================== */
+.director-hero-card {
+  position: relative;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ffffff 0%, #f7faf7 100%);
+  border: 1.5px solid rgba(38, 115, 66, 0.25);
+  box-shadow: 0 12px 36px -8px rgba(38, 115, 66, 0.12), 0 2px 8px -2px rgba(51, 55, 61, 0.04);
+  padding: clamp(1.75rem, 3.5vw, 2.75rem);
+  margin-bottom: 3rem;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.director-hero-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 48px -10px rgba(38, 115, 66, 0.18);
+  border-color: var(--color-green-inst, #267342);
+}
+
+.director-hero-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--color-green-inst, #267342), var(--color-blue-steel, #4f7e9f));
+}
+
+.director-hero-card__badge-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  background: var(--color-green-inst-subtle, #eaf5ec);
+  color: var(--color-green-inst, #267342);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--color-green-inst-border, rgba(38,115,66,0.25));
+}
+
+.director-hero-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.director-avatar-wrapper {
+  position: relative;
+}
+
+.director-avatar {
+  width: clamp(100px, 14vw, 130px);
+  height: clamp(100px, 14vw, 130px);
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  box-shadow:
+    0 0 0 5px rgba(38, 115, 66, 0.22),
+    0 10px 30px -6px rgba(38, 115, 66, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-green-inst, #267342), var(--color-blue-steel, #4f7e9f));
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 2.5rem;
+  font-weight: 900;
+  flex-shrink: 0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.director-avatar:hover {
+  transform: scale(1.04);
+  box-shadow:
+    0 0 0 7px rgba(38, 115, 66, 0.3),
+    0 14px 36px -6px rgba(38, 115, 66, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.director-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.director-info {
+  min-width: 0;
+  width: 100%;
+}
+
+.director-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.6rem 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.director-name {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.8vw, 2.15rem);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: var(--color-text-main, #33373d);
+}
+
+.director-degree-pill {
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  background: var(--color-blue-steel-subtle, #edf4f9);
+  color: var(--color-blue-steel, #4f7e9f);
+  font-size: 0.82rem;
+  font-weight: 800;
+  border: 1px solid var(--color-blue-steel-border, rgba(79, 126, 159, 0.25));
+}
+
+.director-cargo {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-green-inst, #267342);
+  margin-bottom: 0.75rem;
+}
+
+.director-bio {
+  color: var(--color-text-muted, #5f656d);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin: 0 0 1.25rem 0;
+  max-width: 72ch;
+  margin-inline: auto;
+}
+
+.director-meta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem 1rem;
+  align-items: center;
+}
+
+.director-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #dce1da);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--color-text-main, #33373d);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.director-chip svg {
+  color: var(--color-green-inst, #267342);
+  flex-shrink: 0;
+}
+
+.director-chip:hover {
+  border-color: var(--color-green-inst, #267342);
+  color: var(--color-green-inst, #267342);
+  background: var(--color-green-inst-subtle, #eaf5ec);
+}
+
+/* ==========================================================================
+   GRID DE TARJETAS DE PERSONAL
+   ========================================================================== */
+.staff-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+  gap: clamp(1.1rem, 2vw, 1.75rem);
+}
+
+/* ── Tarjeta individual interactiva ── */
+.staff-card {
+  position: relative;
+  background: var(--color-bg-white, #ffffff);
+  border: 1.5px solid color-mix(in srgb, var(--staff-accent, #16764b) 18%, #dce1da);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 14px -3px rgba(51, 55, 61, 0.05);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s ease;
+}
+
+.staff-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--staff-accent, #16764b);
+  box-shadow: 0 16px 32px -8px color-mix(in srgb, var(--staff-accent, #16764b) 22%, transparent), 0 4px 12px -2px rgba(51, 55, 61, 0.04);
+}
+
+.staff-card:focus-within {
+  outline: 2px solid var(--staff-accent, #16764b);
+  outline-offset: 2px;
+}
+
+/* Cabecera de la tarjeta */
+.staff-card__top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.15rem;
+  margin-bottom: 1.15rem;
+  text-align: center;
+}
+
+.staff-avatar {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  background: linear-gradient(135deg, var(--staff-accent, #16764b), color-mix(in srgb, var(--staff-accent, #16764b) 62%, #0b192c));
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  font-size: 1.7rem;
+  font-weight: 850;
+  box-shadow:
+    0 0 0 5px color-mix(in srgb, var(--staff-accent, #16764b) 20%, transparent),
+    0 10px 26px -6px color-mix(in srgb, var(--staff-accent, #16764b) 55%, transparent);
+  flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.staff-card:hover .staff-avatar {
+  transform: scale(1.07);
+  box-shadow:
+    0 0 0 7px color-mix(in srgb, var(--staff-accent, #16764b) 32%, transparent),
+    0 14px 32px -6px color-mix(in srgb, var(--staff-accent, #16764b) 65%, transparent);
+  border-color: var(--staff-accent, #16764b);
+}
+
+.staff-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.staff-card__identity {
+  min-width: 0;
+  flex: 1;
+  width: 100%;
+}
+
+.staff-card__name {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-text-main, #33373d);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.staff-card__cargo {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--staff-accent, #16764b);
+  line-height: 1.4;
+}
+
+.staff-card__grado {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--color-blue-steel, #4f7e9f);
+}
+
+/* Área / Dependencia */
+.staff-card__area-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  background: var(--staff-accent-soft, #e4f4e9);
+  border: 1px solid color-mix(in srgb, var(--staff-accent, #16764b) 20%, white);
+  color: var(--staff-accent, #16764b);
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  width: fit-content;
+  margin-inline: auto;
+}
+
+/* Ubicación de la oficina */
+.staff-card__location {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  background: var(--color-bg-primary, #f9f9f6);
+  border-radius: 8px;
+  border: 1px solid var(--color-border-subtle, #e5eae3);
+  font-size: 0.82rem;
+  color: var(--color-text-muted, #5f656d);
+  line-height: 1.45;
+  margin-bottom: 1.15rem;
+  text-align: left;
+}
+
+.staff-card__location svg {
+  color: var(--staff-accent, #16764b);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+/* Acciones y Contacto en el footer de la tarjeta */
+.staff-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-subtle, #e5eae3);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.staff-btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  background: var(--staff-accent-soft, #e4f4e9);
+  color: var(--staff-accent, #16764b);
+  border: 1px solid color-mix(in srgb, var(--staff-accent, #16764b) 25%, white);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  flex: 1;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.staff-btn-action:hover {
+  background: var(--staff-accent, #16764b);
+  color: #ffffff;
+  border-color: var(--staff-accent, #16764b);
+}
+
+.staff-btn-action--icon {
+  flex: 0 0 auto;
+  padding: 0.45rem 0.65rem;
+}
+
+.staff-btn-action--phone {
+  background: var(--color-blue-steel-subtle, #edf4f9);
+  color: var(--color-blue-steel, #4f7e9f);
+  border-color: var(--color-blue-steel-border, rgba(79, 126, 159, 0.25));
+}
+
+.staff-btn-action--phone:hover {
+  background: var(--color-blue-steel, #4f7e9f);
+  color: #ffffff;
+  border-color: var(--color-blue-steel, #4f7e9f);
+}
+
+/* Skeleton animado */
+.staff-skeleton-card {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #dce1da);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.staff-skeleton-avatar {
+  width: 62px;
+  height: 62px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #edf2f0 25%, #d6e8de 50%, #edf2f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.staff-skeleton-line {
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #edf2f0 25%, #d6e8de 50%, #edf2f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .director-hero-layout {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+  }
+  .director-title-row {
+    justify-content: center;
+  }
+  .director-meta-chips {
+    justify-content: center;
+  }
+  .staff-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .staff-search {
+    max-width: 100%;
+  }
 }

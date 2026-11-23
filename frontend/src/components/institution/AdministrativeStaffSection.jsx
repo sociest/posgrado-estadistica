@@ -30,12 +30,12 @@ function StaffAvatar({ nombre, fotoUrl, className = 'staff-avatar' }) {
   );
 }
 
-function StaffCard({ person, isDirector = false }) {
+function StaffCard({ person, isDirector = false, tone = 'green' }) {
   const nombre = person.nombre?.trim() || 'Funcionario Administrativo';
   const cargo = person.cargo || (isDirector ? 'Director de la Carrera de Estadística' : 'Gestión Administrativa');
 
   return (
-    <article className="staff-card directory-row">
+    <article className={`staff-card directory-row tone-${tone}`}>
       <div className="directory-row__identity">
         <figure className="directory-row__photo">
           <StaffAvatar nombre={nombre} fotoUrl={person.foto_url} className="directory-row__avatar" />
@@ -144,6 +144,7 @@ export default function AdministrativeStaffSection({
                 key={person.id_personal ?? `${person.nombre}-${i}`}
                 person={person}
                 isDirector={director === person}
+                tone={['green', 'blue', 'teal', 'indigo'][i % 4]}
               />
             ))}
           </div>

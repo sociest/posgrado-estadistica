@@ -14,12 +14,12 @@ import {
   Compass,
   ExternalLink,
   CalendarDays,
+  FileCheck2,
   Info,
   AlertCircle,
   Layers,
 } from 'lucide-react';
 import { programaService } from '../../services/programaService';
-import { useInstitutionWhatsApp } from '../../hooks/useInstitutionWhatsApp';
 import './ProgramFaculty.css';
 
 const programFacultyPalettes = [
@@ -93,7 +93,7 @@ export const ProgramDetailView = ({ programId, program: initialProgram, onBack, 
         }
       } catch (err) {
         console.warn('Error cargando programa desde BD:', err);
-        setErrorMsg('No se pudo conectar con la base de datos para cargar este programa.');
+        setErrorMsg(`No se pudo consultar /api/programas/${targetId}: ${err.message || 'Error de conexión con la API.'}`);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -270,11 +270,6 @@ export const ProgramDetailView = ({ programId, program: initialProgram, onBack, 
     };
   }, [rawProgram, esMaestria, ediciones, edicionActiva, mallas, mallaActiva, curriculum, docentes]);
 
-  const whatsappMessage = `Hola, solicito información sobre el programa: ${
-  prog?.title || prog?.nombre_programa || 'Posgrado'
-} - Unidad de Posgrado Carrera de Estadística UMSA.`;
-
-const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
   const handleBackNavigation = () => {
     if (onBack) {
       onBack();
@@ -306,10 +301,10 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
           <AlertCircle size={32} />
         </div>
         <h2 style={{ color: '#0F172A', marginBottom: '0.75rem', fontWeight: 800, fontSize: '1.65rem' }}>
-          Programa no encontrado
+          {errorMsg ? 'No se pudo cargar el programa' : 'Programa no encontrado'}
         </h2>
         <p style={{ color: '#64748B', marginBottom: '2rem', maxWidth: '480px', margin: '0 auto 2rem' }}>
-          El programa académico solicitado no existe o no tiene registros activos en la base de datos de administración.
+          {errorMsg || 'El programa académico solicitado no existe o no tiene registros en la base de datos de administración.'}
         </p>
         <button onClick={handleBackNavigation} className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
           <ArrowLeft size={16} />
@@ -329,7 +324,12 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
   const rawConvocatoriaUrl = prog.convocatoria || prog.edicionActiva?.convocatoria || prog.enlace_pdf_programa || null;
   const directDownloadConvocatoria = getDirectDownloadLink(rawConvocatoriaUrl);
 
+  const directInscripcionUrl = prog.formulario || prog.edicionActiva?.formulario || null;
   const directDownloadGuia = getDirectDownloadLink(prog.enlace_pdf_programa);
+
+  const whatsappMessage = encodeURIComponent(
+    `Hola, solicito información sobre el programa: ${prog.title || prog.nombre_programa} (ID: ${prog.id || ''}) - Unidad de Posgrado Carrera de Estadística UMSA.`
+  );
 
   const totalMateriasCount = progCurriculum.reduce((acc, sem) => acc + (sem.modules?.length || 0), 0);
   const totalEdicionesCount = prog.ediciones?.length || 0;
@@ -521,6 +521,33 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
 
             {/* Botones de Acción */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              {directInscripcionUrl && (
+                <a
+                  href={directInscripcionUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    background: 'linear-gradient(135deg, #059669 0%, #10B981 100%)',
+                    color: '#FFFFFF',
+                    fontWeight: 800,
+                    fontSize: '0.92rem',
+                    padding: '0.75rem 1.4rem',
+                    borderRadius: '8px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    textDecoration: 'none',
+                    boxShadow: '0 6px 20px rgba(5,150,105,0.4)',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <FileCheck2 size={17} />
+                  <span>Formulario de Postulación</span>
+                </a>
+              )}
+
               {directDownloadConvocatoria && (
                 <a
                   href={directDownloadConvocatoria}
@@ -556,12 +583,11 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
               )}
 
               <a
-                href={whatsappUrl || undefined}
-                aria-disabled={!whatsappUrl}
+                href={`https://wa.me/59176543210?text=${whatsappMessage}`}
                 target="_blank"
                 rel="noreferrer"
                 style={{
-                  background: 'linear-gradient(135deg, #176b45 0%, #135938 100%)',
+                  background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
                   color: '#FFFFFF',
                   fontWeight: 800,
                   fontSize: '0.92rem',
@@ -1195,7 +1221,7 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
                       Requisitos de Admisión
                     </h2>
                     <p style={{ fontSize: '0.88rem', margin: 0, color: '#FEF3C7', lineHeight: 1.5 }}>
-                      Información sobre requisitos del programa registrada por la administración
+                      Bases y requisitos de postulación registrados por el administrador
                     </p>
                   </div>
 
@@ -1265,8 +1291,20 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
                     </div>
                   )}
 
-                  {/* Material informativo del programa */}
+                  {/* Acciones de postulación */}
                   <div style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap', marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid #E2E8F0' }}>
+                    {directInscripcionUrl && (
+                      <a
+                        href={directInscripcionUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn btn-primary"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                      >
+                        <FileCheck2 size={16} />
+                        <span>Abrir Formulario de Postulación</span>
+                      </a>
+                    )}
                     {directDownloadConvocatoria && (
                       <a
                         href={directDownloadConvocatoria}
@@ -1404,8 +1442,8 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
                               </p>
                             )}
 
-                            {/* Convocatoria informativa de la edición, si está publicada */}
-                            {edicion.convocatoria && (
+                            {/* Acciones si tiene formulario o convocatoria */}
+                            {(edicion.convocatoria || edicion.formulario) && (
                               <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px dashed #E2E8F0' }}>
                                 {edicion.convocatoria && (
                                   <a
@@ -1416,6 +1454,17 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
                                   >
                                     <Download size={13} />
                                     <span>Descargar Convocatoria de esta Edición</span>
+                                  </a>
+                                )}
+                                {edicion.formulario && (
+                                  <a
+                                    href={edicion.formulario}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.78rem', color: '#2563EB', fontWeight: 700, textDecoration: 'none' }}
+                                  >
+                                    <ExternalLink size={13} />
+                                    <span>Formulario de Inscripción</span>
                                   </a>
                                 )}
                               </div>
@@ -1531,6 +1580,35 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
                 </div>
               </div>
 
+              {/* Botón de Postulación en el Sidebar */}
+              {directInscripcionUrl && (
+                <div style={{ marginTop: '1.15rem', paddingTop: '0.85rem', borderTop: '1px solid #F1F5F9' }}>
+                  <a
+                    href={directInscripcionUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      width: '100%',
+                      background: 'linear-gradient(135deg, #059669 0%, #10B981 100%)',
+                      color: '#FFFFFF',
+                      fontWeight: 800,
+                      fontSize: '0.88rem',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.45rem',
+                      textDecoration: 'none',
+                      boxShadow: '0 4px 12px rgba(5,150,105,0.3)',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    <FileCheck2 size={16} />
+                    <span>Llenar Formulario Web</span>
+                  </a>
+                </div>
+              )}
             </div>
 
             {/* Tarjeta de Contacto */}
@@ -1542,19 +1620,18 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
               boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
             }}>
               <div style={{ fontSize: '0.9rem', fontWeight: 800, marginBottom: '0.35rem' }}>
-                Consultas del programa
+                Atención al Postulante
               </div>
               <p style={{ margin: '0 0 0.85rem 0', fontSize: '0.78rem', color: '#94A3B8', lineHeight: 1.45 }}>
-                Consulte información del programa directamente con la Carrera de Estadística UMSA.
+                Consultas sobre requisitos y postulaciones de la Carrera de Estadística UMSA.
               </p>
               <a
-                href={whatsappUrl || undefined}
-                aria-disabled={!whatsappUrl}
+                href={`https://wa.me/59176543210?text=${whatsappMessage}`}
                 target="_blank"
                 rel="noreferrer"
                 style={{
                   width: '100%',
-                  background: '#176b45',
+                  background: '#25D366',
                   color: '#FFFFFF',
                   fontWeight: 800,
                   fontSize: '0.84rem',

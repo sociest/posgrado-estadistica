@@ -174,6 +174,9 @@
 .faculty-section .faculty-card.directory-row,
 .staff-section .staff-card.directory-row {
   margin: 0;
+}
+
+.faculty-section .faculty-card.directory-row {
   border: 0;
   border-bottom: 1px solid var(--color-border);
   border-radius: 0;
@@ -181,15 +184,90 @@
   box-shadow: none;
 }
 
-.faculty-section .faculty-card.directory-row:hover,
-.staff-section .staff-card.directory-row:hover {
+.staff-section .staff-card.directory-row {
+  min-height: 230px;
+  padding: clamp(1.35rem, 2vw, 1.9rem);
+  border: 1px solid color-mix(in srgb, var(--tone, var(--color-green-accent)) 24%, white);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #ffffff 8%, color-mix(in srgb, var(--tone-soft, #ddf3e6) 55%, white) 100%);
+  box-shadow: 0 12px 28px -18px color-mix(in srgb, var(--tone, var(--color-green-accent)) 50%, transparent);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+}
+
+.staff-section .staff-card.directory-row {
+  --staff-accent: var(--tone, var(--color-green-accent));
+  --staff-accent-soft: var(--tone-soft, #ddf3e6);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.4rem;
+  overflow: hidden;
+  text-align: left;
+}
+
+.staff-section .staff-card.directory-row::before {
+  inset: 0 0 auto;
+  width: auto;
+  height: 6px;
+  border-radius: 22px 22px 0 0;
+  background: var(--tone-grad, linear-gradient(90deg, #0f7b4b, #1d5fd0));
+  opacity: 1;
+}
+
+.staff-section .staff-card.directory-row .directory-row__identity {
+  width: 100%;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: center;
+}
+
+.staff-section .staff-card.directory-row .directory-row__photo {
+  flex-basis: clamp(104px, 8vw, 132px);
+  width: clamp(104px, 8vw, 132px);
+  height: clamp(104px, 8vw, 132px);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--staff-accent) 28%, white),
+    0 12px 26px -10px color-mix(in srgb, var(--staff-accent) 58%, transparent);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.staff-section .staff-card.directory-row .staff-card__name {
+  color: var(--tone-ink, var(--color-blue-dark));
+  font-size: clamp(1.12rem, 1.4vw, 1.35rem);
+  transition: color 180ms ease;
+}
+
+.staff-section .staff-card.directory-row .staff-card__cargo {
+  color: var(--inst-muted, #4a5b6c);
+  font-size: 0.98rem;
+  font-weight: 550;
+}
+
+.faculty-section .faculty-card.directory-row:hover {
   transform: none;
   border-color: var(--color-border);
   background: var(--color-bg-hover);
   box-shadow: none;
 }
 
-.staff-section .staff-card.directory-row .staff-card__cargo { color: #4a5562; font-size: 0.90625rem; font-weight: 500; }
+.staff-section .staff-card.directory-row:hover {
+  transform: translateY(-6px);
+  border-color: var(--staff-accent, var(--directory-blue));
+  background: linear-gradient(145deg, #ffffff 0%, color-mix(in srgb, var(--staff-accent-soft, #ddf3e6) 72%, white) 100%);
+  box-shadow: 0 22px 42px -20px color-mix(in srgb, var(--staff-accent, var(--directory-blue)) 62%, transparent);
+}
+
+.staff-section .staff-card.directory-row:hover .directory-row__photo {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--staff-accent) 35%, white),
+    0 16px 30px -10px color-mix(in srgb, var(--staff-accent) 66%, transparent);
+}
+
+.staff-section .staff-card.directory-row:focus-within {
+  outline: 3px solid var(--inst-amber, #f4b63f);
+  outline-offset: 3px;
+}
+
+.staff-section .staff-card.directory-row:focus-visible { outline: 3px solid var(--inst-amber, #f4b63f); outline-offset: 3px; }
 
 .sr-only {
   position: absolute;
@@ -219,6 +297,10 @@
   .directory-row::before { display: none; }
   .directory-row__identity { align-items: flex-start; }
   .directory-row__photo { flex-basis: 64px; width: 64px; height: 64px; }
+  .staff-section .staff-card.directory-row { min-height: 180px; padding: 1.3rem; }
+  .staff-section .staff-card.directory-row::before { display: block; }
+  .staff-section .staff-card.directory-row .directory-row__identity { align-items: center; }
+  .staff-section .staff-card.directory-row .directory-row__photo { flex-basis: 88px; width: 88px; height: 88px; }
   .directory-row__contact,
   .directory-row__location { margin-left: 80px; }
   .directory-row__publication { grid-column: 1; margin-left: 80px; }

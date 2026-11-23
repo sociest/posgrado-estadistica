@@ -9,7 +9,6 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { programaService } from '../../services/programaService';
-import { useInstitutionWhatsApp } from '../../hooks/useInstitutionWhatsApp';
 
 import slide1 from '../../assets/images/carrusel/slide1.jpg';
 import slide2 from '../../assets/images/carrusel/slide2.jpg';
@@ -42,7 +41,6 @@ const getProgramCardBanner = (prog, idx) => {
 };
 
 export const FeaturedPrograms = ({ onSelectProgram }) => {
-  const whatsappUrl = useInstitutionWhatsApp('Hola, deseo información y consultar sobre la postulación a los programas de Posgrado en Estadística UMSA.');
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -283,10 +281,9 @@ export const FeaturedPrograms = ({ onSelectProgram }) => {
                     gap: '0.65rem',
                     padding: '1.1rem 1.5rem 1.35rem',
                   }}>
-                    <a
-                      href={`#programa/${prog.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      type="button"
+                      onClick={() => onSelectProgram?.(prog)}
                       style={{
                         background: 'rgba(255,255,255,0.12)',
                         color: '#ffffff',
@@ -306,20 +303,19 @@ export const FeaturedPrograms = ({ onSelectProgram }) => {
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.22)'}
                       onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
-                      title="Abrir detalles del programa en una nueva pestaña"
+                      title="Ver detalles del programa"
                     >
                       <FileText size={15} />
                       <span>Más info</span>
-                    </a>
+                    </button>
 
                     {/* Derivar a WhatsApp */}
                     <a
-                      href={whatsappUrl || undefined}
-                      aria-disabled={!whatsappUrl}
+                      href={`https://wa.me/59176543210?text=${encodeURIComponent(`Hola, deseo más información y consultar sobre la postulación al programa: ${prog.title}`)}`}
                       target="_blank"
                       rel="noreferrer"
                       style={{
-                        background: '#176b45',
+                        background: '#25D366',
                         color: '#FFFFFF',
                         border: 'none',
                         borderRadius: '6px',
@@ -336,11 +332,11 @@ export const FeaturedPrograms = ({ onSelectProgram }) => {
                         transition: 'background 0.18s ease, transform 0.15s ease',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#125236';
+                        e.currentTarget.style.background = '#20BA5A';
                         e.currentTarget.style.transform = 'translateY(-1px)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = '#176b45';
+                        e.currentTarget.style.background = '#25D366';
                         e.currentTarget.style.transform = 'translateY(0)';
                       }}
                     >

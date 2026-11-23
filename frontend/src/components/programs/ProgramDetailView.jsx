@@ -270,6 +270,11 @@ export const ProgramDetailView = ({ programId, program: initialProgram, onBack, 
     };
   }, [rawProgram, esMaestria, ediciones, edicionActiva, mallas, mallaActiva, curriculum, docentes]);
 
+  const whatsappMessage = `Hola, solicito información sobre el programa: ${
+  prog?.title || prog?.nombre_programa || 'Posgrado'
+} - Unidad de Posgrado Carrera de Estadística UMSA.`;
+
+const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
   const handleBackNavigation = () => {
     if (onBack) {
       onBack();

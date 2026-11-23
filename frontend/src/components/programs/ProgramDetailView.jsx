@@ -331,8 +331,6 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
 
   const directDownloadGuia = getDirectDownloadLink(prog.enlace_pdf_programa);
 
-  const whatsappUrl = useInstitutionWhatsApp(`Hola, solicito información sobre el programa: ${prog.title || prog.nombre_programa} - Unidad de Posgrado Carrera de Estadística UMSA.`);
-
   const totalMateriasCount = progCurriculum.reduce((acc, sem) => acc + (sem.modules?.length || 0), 0);
   const totalEdicionesCount = prog.ediciones?.length || 0;
 

@@ -101,10 +101,14 @@ const MainApp = () => {
   }, [currentTab, currentUser]);
 
   const handleOpenProgramDetail = (prog) => {
-    const progId = prog?.id || prog?.code || prog;
+    const progId = prog?.id_programa ?? prog?.id ?? prog?.code ?? prog;
+    if (progId == null || progId === '') {
+      console.error('No se puede abrir el detalle: el programa no tiene id_programa, id ni code.', prog);
+      return;
+    }
     setSelectedProgramDetailId(progId);
     setCurrentTab('programa-detalle');
-    window.location.hash = `programa/${progId}`;
+    window.location.hash = `programa/${encodeURIComponent(String(progId))}`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

@@ -63,10 +63,11 @@ const fechaInput = (valor) =>
   valor ? String(valor).slice(0, 10) : '';
 
 const normalizarEnlaceImagen = (valor) => {
-  const driveId = String(valor || '').match(/(?:\/file\/d\/|[?&]id=)([\w-]+)/)?.[1];
+  const enlace = String(valor || '').trim();
+  const driveId = enlace.match(/(?:\/file\/d\/|[?&]id=)([\w-]+)/)?.[1];
   return driveId
-    ? `https://drive.google.com/uc?export=view&id=${driveId}`
-    : valor;
+    ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w1600`
+    : enlace;
 };
 
 const normalizarEdicion = (edicion) => ({

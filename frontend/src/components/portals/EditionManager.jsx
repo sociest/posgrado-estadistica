@@ -14,7 +14,8 @@ import {
   Plus,
   Save,
   X,
-  Users
+  Users,
+  Upload
 } from 'lucide-react';
 
 import { apiJson } from '../../utils/api';
@@ -772,46 +773,56 @@ export const EditionManager = ({
             <div className="em-field em-wide">
               <strong>Material gráfico de esta edición</strong>
               <small>Sube los archivos al servidor o pega un enlace público de Drive.</small>
-              <label className="em-field">
-                Banner (imagen)
+              <div className="em-field">
+                <strong>Banner (imagen)</strong>
                 <input
                   type="url"
                   value={form.banner || ''}
                   onChange={(e) => setForm({ ...form, banner: normalizarEnlaceImagen(e.target.value) })}
                   placeholder="https://drive.google.com/... o URL de imagen"
                 />
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  disabled={uploadingAsset.banner}
-                  onChange={(e) => {
-                    subirArchivoEdicion('banner', e.target.files?.[0]);
-                    e.target.value = '';
-                  }}
-                />
+                <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', width: 'fit-content' }}>
+                  <Upload size={14} />
+                  <span>{uploadingAsset.banner ? 'Subiendo banner…' : 'Subir imagen local'}</span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    disabled={uploadingAsset.banner}
+                    onChange={(e) => {
+                      subirArchivoEdicion('banner', e.target.files?.[0]);
+                      e.target.value = '';
+                    }}
+                    style={{ display: 'none' }}
+                  />
+                </label>
                 {uploadingAsset.banner && <small>Subiendo banner…</small>}
                 {form.banner && <img src={form.banner} alt="Vista previa del banner" style={{ maxWidth: '100%', maxHeight: 180, objectFit: 'cover', borderRadius: 8 }} />}
-              </label>
-              <label className="em-field">
-                Folleto (PDF o imagen)
+              </div>
+              <div className="em-field">
+                <strong>Folleto (PDF o imagen)</strong>
                 <input
                   type="url"
                   value={form.folleto || ''}
                   onChange={(e) => setForm({ ...form, folleto: e.target.value })}
                   placeholder="https://drive.google.com/... o URL del folleto"
                 />
-                <input
-                  type="file"
-                  accept="application/pdf,image/jpeg,image/png,image/webp"
-                  disabled={uploadingAsset.folleto}
-                  onChange={(e) => {
-                    subirArchivoEdicion('folleto', e.target.files?.[0]);
-                    e.target.value = '';
-                  }}
-                />
+                <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', width: 'fit-content' }}>
+                  <Upload size={14} />
+                  <span>{uploadingAsset.folleto ? 'Subiendo folleto…' : 'Subir archivo local'}</span>
+                  <input
+                    type="file"
+                    accept="application/pdf,image/jpeg,image/png,image/webp"
+                    disabled={uploadingAsset.folleto}
+                    onChange={(e) => {
+                      subirArchivoEdicion('folleto', e.target.files?.[0]);
+                      e.target.value = '';
+                    }}
+                    style={{ display: 'none' }}
+                  />
+                </label>
                 {uploadingAsset.folleto && <small>Subiendo folleto…</small>}
                 {form.folleto && <a href={form.folleto} target="_blank" rel="noreferrer">Abrir folleto actual</a>}
-              </label>
+              </div>
             </div>
 
             <label className="em-field">

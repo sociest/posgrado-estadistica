@@ -35,7 +35,7 @@ services:
       AUTORUN_LARAVEL_MIGRATION_FORCE: "true"
       HEALTHCHECK_PATH: /up
     volumes:
-      - ../files/storage:/var/www/html/storage/app/public
+      - public_storage:/var/www/html/storage/app/public
       - app_cache:/var/www/html/storage/framework/cache/data
     depends_on:
       db:
@@ -83,3 +83,4 @@ networks:
 volumes:
   db_data:
   app_cache:
+  public_storage:

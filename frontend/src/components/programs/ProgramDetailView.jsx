@@ -270,6 +270,11 @@ export const ProgramDetailView = ({ programId, program: initialProgram, onBack, 
     };
   }, [rawProgram, esMaestria, ediciones, edicionActiva, mallas, mallaActiva, curriculum, docentes]);
 
+  const whatsappMessage = `Hola, solicito información sobre el programa: ${
+  prog?.title || prog?.nombre_programa || 'Posgrado'
+} - Unidad de Posgrado Carrera de Estadística UMSA.`;
+
+const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
   const handleBackNavigation = () => {
     if (onBack) {
       onBack();
@@ -325,8 +330,6 @@ export const ProgramDetailView = ({ programId, program: initialProgram, onBack, 
   const directDownloadConvocatoria = getDirectDownloadLink(rawConvocatoriaUrl);
 
   const directDownloadGuia = getDirectDownloadLink(prog.enlace_pdf_programa);
-
-  const whatsappUrl = useInstitutionWhatsApp(`Hola, solicito información sobre el programa: ${prog.title || prog.nombre_programa} - Unidad de Posgrado Carrera de Estadística UMSA.`);
 
   const totalMateriasCount = progCurriculum.reduce((acc, sem) => acc + (sem.modules?.length || 0), 0);
   const totalEdicionesCount = prog.ediciones?.length || 0;

@@ -62,26 +62,45 @@ const NUEVA = {
 const fechaInput = (valor) =>
   valor ? String(valor).slice(0, 10) : '';
 
+const obtenerIdDrive = (valor) =>
+  String(valor || '').match(/(?:\/file\/d\/|[?&]id=)([\w-]+)/)?.[1] || null;
+
 const normalizarEnlaceImagen = (valor) => {
   const enlace = String(valor || '').trim();
-  const driveId = enlace.match(/(?:\/file\/d\/|[?&]id=)([\w-]+)/)?.[1];
+  const driveId = obtenerIdDrive(enlace);
   return driveId
     ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w1600`
     : enlace;
 };
 
-const normalizarEdicion = (edicion) => ({
-  ...NUEVA,
-  ...Object.fromEntries(
-    Object.keys(NUEVA).map((key) => [
-      key,
-      edicion[key] ?? NUEVA[key]
-    ])
-  ),
-  fecha_inicio: fechaInput(edicion.fecha_inicio),
-  fecha_fin: fechaInput(edicion.fecha_fin),
-  id_malla: String(edicion.id_malla ?? '')
-});
+const normalizarEnlaceFolleto = (valor) => {
+  const enlace = String(valor || '').trim();
+  const driveId = obtenerIdDrive(enlace);
+  return driveId
+    ? `https://drive.google.com/file/d/${driveId}/preview`
+    : enlace;
+};
+
+const normalizarEdicion = (edicion) => {
+  const form = {
+    ...NUEVA,
+    ...Object.fromEntries(
+      Object.keys(NUEVA).map((key) => [
+        key,
+        edicion[key] ?? NUEVA[key]
+      ])
+    ),
+    fecha_inicio: fechaInput(edicion.fecha_inicio),
+    fecha_fin: fechaInput(edicion.fecha_fin),
+    id_malla: String(edicion.id_malla ?? '')
+  };
+
+  return {
+    ...form,
+    banner: normalizarEnlaceImagen(form.banner),
+    folleto: normalizarEnlaceFolleto(form.folleto)
+  };
+};
 
 const obtenerIdDocente = (docente) =>
   Number(docente?.id_doc ?? docente?.id);
@@ -806,7 +825,7 @@ export const EditionManager = ({
                 <input
                   type="url"
                   value={form.folleto || ''}
-                  onChange={(e) => setForm({ ...form, folleto: e.target.value })}
+                  onChange={(e) => setForm({ ...form, folleto: normalizarEnlaceFolleto(e.target.value) })}
                   placeholder="https://drive.google.com/... o URL del folleto"
                 />
                 <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', width: 'fit-content' }}>
@@ -825,7 +844,16 @@ export const EditionManager = ({
                 </label>
                 {uploadingAsset.folleto && <small>Subiendo folleto…</small>}
                 {form.folleto && <small>Archivo listo. Guarda la edición al final para aplicar el cambio.</small>}
-                {form.folleto && <a href={form.folleto} target="_blank" rel="noreferrer">Abrir folleto actual</a>}
+                {form.folleto && (
+                  <>
+                    <iframe
+                      src={form.folleto}
+                      title="Vista previa del folleto"
+                      style={{ width: '100%', height: 240, border: '1px solid #cbd5e1', borderRadius: 8 }}
+                    />
+                    <a href={form.folleto} target="_blank" rel="noreferrer">Abrir folleto en otra pestaña</a>
+                  </>
+                )}
               </div>
             </div>
 

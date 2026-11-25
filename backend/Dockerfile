@@ -7,10 +7,11 @@ WORKDIR /var/www/html
 COPY --chown=www-data:www-data . /var/www/html
 
 # Laravel acepta archivos de hasta 20 MB; PHP debe permitir el request completo.
+USER root
 RUN printf 'file_uploads=On\nupload_max_filesize=25M\npost_max_size=26M\nmax_file_uploads=20\n' \
     > /usr/local/etc/php/conf.d/uploads.ini
 
-USER root
+USER www-data
 RUN composer install \
     --no-dev \
     --no-interaction \

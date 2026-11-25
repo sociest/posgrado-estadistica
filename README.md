@@ -200,7 +200,7 @@ git push -u origin feature/nombre-del-cambio
 
 ## Despliegue oficial en Dokploy
 
-El despliegue productivo debe configurarse desde el repositorio de la organización `github.com/sociest` después de la revisión y aprobación institucional. En Dokploy se selecciona `compose.yaml`, se configura la red externa `dokploy-network` y se enrutan los dominios al servicio `frontend` (puerto interno 80) y a `app` (puerto interno 8080). El volumen nombrado `db_data` conserva PostgreSQL; los archivos persistentes se montan desde `../files/storage`.
+El despliegue productivo debe configurarse desde el repositorio de la organización `github.com/sociest` después de la revisión y aprobación institucional. En Dokploy se selecciona `compose.yaml`, se configura la red externa `dokploy-network` y se enrutan los dominios al servicio `frontend` (puerto interno 80) y a `app` (puerto interno 8080). Los volúmenes nombrados `db_data` y `public_storage` conservan PostgreSQL y los archivos públicos, respectivamente.
 
 La aplicación actualmente no envía correos desde el servidor. Si se agrega envío de restablecimiento de contraseña o notificaciones, se debe coordinar un SMTP externo y configurar sus credenciales únicamente en Dokploy.
 

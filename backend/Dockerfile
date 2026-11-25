@@ -10,7 +10,7 @@ COPY --chown=www-data:www-data . /var/www/html
 RUN printf 'file_uploads=On\nupload_max_filesize=25M\npost_max_size=26M\nmax_file_uploads=20\n' \
     > /usr/local/etc/php/conf.d/uploads.ini
 
-USER www-data
+USER root
 RUN composer install \
     --no-dev \
     --no-interaction \

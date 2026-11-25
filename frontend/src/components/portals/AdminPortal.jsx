@@ -571,7 +571,7 @@ export const AdminPortal = ({ onExitAdmin }) => {
     try {
       const data = await docenteService.uploadFoto(file);
       setDocenteForm(prev => ({ ...prev, foto_url: data.url }));
-      showNotification('Fotografía subida y resguardada localmente en el servidor');
+      showNotification('Foto subida. Pulsa “Actualizar Docente” al final del formulario para guardar el cambio en la ficha.');
     } catch (err) {
       showNotification(err.message, 'error');
     } finally {
@@ -2307,7 +2307,7 @@ export const AdminPortal = ({ onExitAdmin }) => {
                     </label>
                     {docenteForm.foto_url && (
                       <span style={{ fontSize: '0.75rem', color: 'var(--color-green-inst)', fontWeight: 600 }}>
-                        ✓ Imagen guardada
+                        ✓ Foto subida; falta actualizar la ficha
                       </span>
                     )}
                   </div>

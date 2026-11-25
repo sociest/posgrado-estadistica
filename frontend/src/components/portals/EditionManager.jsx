@@ -299,6 +299,7 @@ export const EditionManager = ({
       });
       setForm((actual) => ({ ...actual, [campo]: resultado.url }));
       setError('');
+      setNotice(`${campo === 'banner' ? 'Banner' : 'Folleto'} subido. Pulsa “Guardar edición y docentes” para guardar el enlace en la edición.`);
     } catch (err) {
       setError(`No se pudo subir ${campo === 'banner' ? 'el banner' : 'el folleto'}: ${err.message}`);
     } finally {
@@ -797,6 +798,7 @@ export const EditionManager = ({
                   />
                 </label>
                 {uploadingAsset.banner && <small>Subiendo banner…</small>}
+                {form.banner && <small>Archivo listo. Guarda la edición al final para aplicar el cambio.</small>}
                 {form.banner && <img src={form.banner} alt="Vista previa del banner" style={{ maxWidth: '100%', maxHeight: 180, objectFit: 'cover', borderRadius: 8 }} />}
               </div>
               <div className="em-field">
@@ -822,6 +824,7 @@ export const EditionManager = ({
                   />
                 </label>
                 {uploadingAsset.folleto && <small>Subiendo folleto…</small>}
+                {form.folleto && <small>Archivo listo. Guarda la edición al final para aplicar el cambio.</small>}
                 {form.folleto && <a href={form.folleto} target="_blank" rel="noreferrer">Abrir folleto actual</a>}
               </div>
             </div>

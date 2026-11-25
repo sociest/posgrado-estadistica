@@ -325,6 +325,14 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
 
   const heroBannerUrl = prog.banner || prog.edicionActiva?.banner || null;
   const programPostUrl = prog.folleto || prog.edicionActiva?.folleto || null;
+  const driveBrochureId = programPostUrl?.match(/drive\.google\.com\/(?:file\/d\/|uc\?(?:[^#]*&)?id=|open\?(?:[^#]*&)?id=)([\w-]+)/i)?.[1] || null;
+  const brochureViewUrl = driveBrochureId
+    ? `https://drive.google.com/file/d/${driveBrochureId}/preview`
+    : programPostUrl;
+  const isDrivePreview = Boolean(driveBrochureId);
+  const isPdfBrochure = Boolean(
+    programPostUrl && (/\.pdf(?:$|[?#])/i.test(programPostUrl) || isDrivePreview)
+  );
 
   const rawConvocatoriaUrl = prog.convocatoria || prog.edicionActiva?.convocatoria || prog.enlace_pdf_programa || null;
   const directDownloadConvocatoria = getDirectDownloadLink(rawConvocatoriaUrl);
@@ -1454,18 +1462,23 @@ const whatsappUrl = useInstitutionWhatsApp(whatsappMessage);
               boxShadow: '0 6px 20px rgba(0,0,0,0.06)',
             }}>
               {programPostUrl ? (
-                /\.pdf(?:$|[?#])/i.test(programPostUrl) ? (
-                  <div style={{ padding: '2rem 1rem', textAlign: 'center' }}>
-                    <FileText size={40} color="#059669" style={{ margin: '0 auto 0.75rem' }} />
-                    <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#0F172A', marginBottom: '0.5rem' }}>
-                      Folleto Oficial (PDF)
+                isPdfBrochure ? (
+                  <div style={{ padding: '0.75rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem', color: '#0F172A', fontWeight: 800 }}>
+                      <FileText size={20} color="#059669" />
+                      <span>Folleto Oficial (PDF)</span>
                     </div>
+                    <iframe
+                      src={brochureViewUrl}
+                      title={`Folleto oficial de ${prog.title}`}
+                      style={{ width: '100%', height: 320, border: '1px solid #E2E8F0', borderRadius: 8 }}
+                    />
                     <a
-                      href={programPostUrl}
+                      href={brochureViewUrl}
                       target="_blank"
                       rel="noreferrer"
                       className="btn btn-secondary btn-sm"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.6rem' }}
                     >
                       <Download size={14} />
                       <span>Abrir Folleto Oficial</span>
